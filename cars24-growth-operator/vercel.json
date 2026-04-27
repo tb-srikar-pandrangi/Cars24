@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm ci && npm run build && echo 'Build completed successfully'",
+  "buildCommand": "npm run build:vercel",
   "installCommand": "npm ci",
   "devCommand": "cd packages/ui && npm run dev",
-  "outputDirectory": "packages/ui/.next"
+  "outputDirectory": ".next-output"
 }
