@@ -4,21 +4,30 @@
  * Hot-path: O(1) per event — one JSON.stringify + one TextEncoder.encode per yield.
  */
 import type { NextRequest } from 'next/server';
-import { bus } from '@cars24/shared';
-import type { AgentEvent } from '@cars24/shared';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-const EVENT_TYPES: AgentEvent['type'][] = [
+const EVENT_TYPES = [
   'metrics_ready', 'funnel_health', 'diagnosis_ready', 'alert',
   'creative_scored', 'creative_improved', 'allocation_decided', 'allocation_applied',
   'ingest_error', 'competitor_alert'
-];
+] as const;
 
 export function GET(_req: NextRequest): Response {
   const stream = new ReadableStream({
-    start(controller) {
+    async start(controller) {
+      // Lazy-load bus only at runtime to avoid build-time imports
+      let bus: any = null;
+      try {
+        const { bus: importedBus } = await import('@cars24/shared');
+        bus = importedBus;
+      } catch {
+        // Bus not available; send mock events or close connection
+        controller.close();
+        return;
+      }
+
       const enc = new TextEncoder();
       const unsubscribes: Array<() => void> = [];
 
@@ -34,11 +43,13 @@ export function GET(_req: NextRequest): Response {
       send({ type: 'connected', payload: { ts: new Date().toISOString() } });
 
       // Subscribe to all event types and forward to client.
-      for (const eventType of EVENT_TYPES) {
-        const off = bus.on(eventType, (payload) => {
-          send({ type: eventType, payload });
-        });
-        unsubscribes.push(off);
+      if (bus) {
+        for (const eventType of EVENT_TYPES) {
+          const off = bus.on(eventType, (payload: unknown) => {
+            send({ type: eventType, payload });
+          });
+          unsubscribes.push(off);
+        }
       }
 
       // Heartbeat every 25s to prevent proxy timeouts.

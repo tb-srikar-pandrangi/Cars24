@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "env": {
+    "DATABASE_URL": "@database_url"
+  },
+  "projects": [
+    {
+      "name": "cars24-ui",
+      "rootDirectory": "packages/ui"
+    }
+  ]
+}

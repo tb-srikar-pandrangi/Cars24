@@ -10,10 +10,10 @@
     "clean": "rm -rf .next"
   },
   "dependencies": {
-    "@cars24/shared": "workspace:*",
-    "@cars24/orchestrator": "workspace:*",
+    "@cars24/shared": "*",
+    "@cars24/orchestrator": "*",
     "@tanstack/react-virtual": "^3.0.0",
-    "next": "14.2.3",
+    "next": "^14.2.4",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },
