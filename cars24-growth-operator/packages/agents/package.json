@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
-    "@cars24/shared": "workspace:*"
+    "@cars24/shared": "*"
   },
   "devDependencies": {
     "typescript": "^5.4.0"

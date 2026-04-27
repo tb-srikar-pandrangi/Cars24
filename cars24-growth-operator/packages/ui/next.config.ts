@@ -6,7 +6,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@cars24/shared', '@cars24/orchestrator'],
+  transpilePackages: ['@cars24/shared', '@cars24/agents', '@cars24/orchestrator'],
 };
 
 export default nextConfig;

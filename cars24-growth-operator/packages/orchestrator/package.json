@@ -16,8 +16,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@cars24/shared": "workspace:*",
-    "@cars24/agents": "workspace:*"
+    "@cars24/shared": "*",
+    "@cars24/agents": "*"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
