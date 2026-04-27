@@ -176,8 +176,8 @@ export default function FunnelsPage() {
           campaignName={selectedData.campaignName}
           geo={selectedData.geo}
           funnel={Object.entries(campaignsByFunnel).find(([, c]) => c.some((x) => x.campaignId === selectedData.campaignId))?.[0] || 'SELL'}
-          issues={selectedData.issues}
-          recommendedActions={selectedData.actions}
+          issues={(selectedData.issues ?? []) as Array<{ stage: string; dropoffRate: number; severity: 'ok' | 'warning' | 'critical'; description: string }>}
+          recommendedActions={selectedData.actions ?? []}
           appointments={selectedData.appointments || 0}
           inspections={selectedData.inspections || 0}
           transactions={selectedData.transactions || 0}
