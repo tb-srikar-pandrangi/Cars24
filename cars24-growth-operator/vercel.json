@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run --prefix packages/ui build",
-  "installCommand": "npm ci && npm run --prefix packages/shared build && npm run --prefix packages/agents build && npm run --prefix packages/orchestrator build",
-  "devCommand": "npm run --prefix packages/ui dev",
+  "buildCommand": "cd packages/shared && npm run build && cd ../agents && npm run build && cd ../orchestrator && npm run build && cd ../ui && npm run build",
+  "installCommand": "npm ci",
+  "devCommand": "cd packages/ui && npm run dev",
   "outputDirectory": "packages/ui/.next"
 }
