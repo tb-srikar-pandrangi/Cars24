@@ -29,9 +29,6 @@ cd packages/ui
 npm run build
 cd ../..
 
-echo "Copying .next to root..."
-cp -r packages/ui/.next .
-
 echo "Build completed successfully!"
 echo "Output directory contents:"
-ls -la .next | head -20
+ls -la packages/ui/.next | head -20
