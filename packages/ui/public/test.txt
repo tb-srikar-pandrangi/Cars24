@@ -1,0 +1,2 @@
+Vercel deployment test file
+If you see this, Vercel can serve static files.
