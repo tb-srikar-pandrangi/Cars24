@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm --workspace=@cars24/shared run build && npm --workspace=@cars24/agents run build && npm --workspace=@cars24/orchestrator run build && npm --workspace=@cars24/ui run build",
   "installCommand": "npm ci",
   "devCommand": "cd packages/ui && npm run dev",
   "outputDirectory": "packages/ui/.next"
