@@ -272,7 +272,8 @@ function spawnWorker(
   worker.on('message', (msg: FromWorker) => onEvent(msg, role));
 
   worker.on('error', (err) => {
-    process.stderr.write(`[${WORKER_NAMES[role]}] uncaught error: ${err.message}\n`);
+    const msg = err instanceof Error ? err.message : String(err);
+    process.stderr.write(`[${WORKER_NAMES[role]}] uncaught error: ${msg}\n`);
   });
 
   worker.on('exit', (code) => {

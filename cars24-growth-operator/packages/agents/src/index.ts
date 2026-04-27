@@ -4,6 +4,7 @@
  * O(1) — module load only.
  */
 export * from './types.js';
+export * from './dataIngestion.js';
 export * from './metrics-ingest.agent.js';
 export * from './funnel-health.agent.js';
 export * from './diagnosis.agent.js';

@@ -1,14 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "env": {
-    "DATABASE_URL": "@database_url"
-  },
-  "projects": [
-    {
-      "name": "cars24-ui",
-      "rootDirectory": "packages/ui"
-    }
-  ]
+  "buildCommand": "cd packages/ui && npm run build",
+  "installCommand": "npm ci",
+  "devCommand": "cd packages/ui && npm run dev",
+  "outputDirectory": "packages/ui/.next"
 }
