@@ -66,39 +66,72 @@ If successful, you'll see:
 
 ## Deployment Steps
 
-### For Vercel:
-1. Connect your GitHub repository to Vercel
-2. Set environment variable: `DATABASE_URL`
-3. Vercel will automatically deploy on every push
+### ⭐ **Recommended: Deploy to Vercel**
 
-### For Other Platforms:
-The GitHub Actions workflow validates builds automatically. The project is now ready to deploy with:
+Vercel is the best choice for Next.js applications:
 
-```bash
-npm ci
-npm run build
-```
+1. Go to **vercel.com** and sign up with your GitHub account
+2. Click "Add New..." → "Project"
+3. Select your GitHub repository
+4. Framework preset: Next.js (auto-detected)
+5. Root directory: `packages/ui`
+6. Add environment variables:
+   - `DATABASE_URL`: Your database URL
+7. Click "Deploy"
+
+The app will be live at a `vercel.app` URL in seconds!
+
+### Alternative: AWS Amplify
+
+1. Go to **AWS Amplify Console**
+2. Connect your GitHub repository
+3. Select the branch to deploy
+4. Set build command: `npm run build`
+5. Set output directory: `packages/ui/.next`
+
+### Alternative: Netlify
+
+1. Go to **app.netlify.com**
+2. Click "Add new site" → "Import an existing project"
+3. Connect GitHub and select your repository
+4. Set build command: `npm run build`
+5. Set publish directory: `packages/ui/out`
+6. Add environment variable: `DATABASE_URL`
 
 ## Current Status
 
 ✅ **Build passes locally**
 ✅ **All TypeScript checks pass**
-✅ **GitHub Actions workflow active**
+✅ **GitHub Actions validates on every push**
+✅ **GitHub Pages conflict resolved (.nojekyll)**
 ✅ **Ready for production deployment**
+
+## Why Not GitHub Pages?
+
+GitHub Pages is designed for static Jekyll sites, not Next.js applications. While you *could* export Next.js as static HTML, it would lose:
+- API routes (`/api/events`, `/api/status`, etc.)
+- Server-side rendering capabilities
+- Real-time SSE streaming
+
+**Recommendation**: Use Vercel, Netlify, or AWS Amplify for the best Next.js hosting experience.
 
 ## Troubleshooting
 
-If builds still fail:
-
-1. Check GitHub Actions logs: Go to your repo → Actions tab
+### Build fails on GitHub Actions?
+1. Check Actions tab → your workflow → view logs
 2. Common issues:
-   - Missing `DATABASE_URL` environment variable
-   - Node.js version mismatch (requires 20.x)
-   - npm cache corruption: Try `npm ci --force`
+   - `npm ci` fails: Delete `package-lock.json` and push again
+   - Missing dependencies: Ensure all imports are correct
+   - TypeScript errors: Run `npm run typecheck` locally
 
-3. For local debugging:
-   ```bash
-   npm run clean
-   npm install
-   npm run build
-   ```
+### GitHub Pages still trying to build Jekyll?
+The `.nojekyll` file tells GitHub to skip Jekyll. If it still builds:
+1. Go to repo Settings → Pages
+2. Set Source to "GitHub Actions" (not Branch)
+3. Or disable Pages entirely
+
+### Can't connect to DATABASE_URL?
+The API routes need a real database connection. For development/testing:
+1. Set up a PostgreSQL instance (free tier available on Railway or Render)
+2. Add the connection string to your deployment platform's env vars
+3. Or run the backend locally for development
