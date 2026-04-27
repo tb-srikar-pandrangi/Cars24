@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "framework": null,
   "buildCommand": "cd packages/shared && npm run build && cd ../agents && npm run build && cd ../orchestrator && npm run build && cd ../ui && npm run build",
   "installCommand": "npm ci",
   "devCommand": "cd packages/ui && npm run dev",
