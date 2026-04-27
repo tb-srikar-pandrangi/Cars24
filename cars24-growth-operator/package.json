@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "turbo build",
-    "build:vercel": "turbo build && cp -r packages/ui/.next .next-output",
+    "build:vercel": "turbo build && cp -r packages/ui/.next .",
     "dev": "turbo dev",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean"

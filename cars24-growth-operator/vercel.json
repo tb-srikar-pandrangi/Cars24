@@ -2,6 +2,5 @@
   "version": 2,
   "buildCommand": "npm run build:vercel",
   "installCommand": "npm ci",
-  "devCommand": "cd packages/ui && npm run dev",
-  "outputDirectory": ".next-output"
+  "devCommand": "cd packages/ui && npm run dev"
 }
