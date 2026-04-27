@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "framework": null,
-  "buildCommand": "bash vercel-build.sh",
-  "installCommand": "npm ci",
-  "devCommand": "cd packages/ui && npm run dev",
-  "outputDirectory": ".next"
-}
