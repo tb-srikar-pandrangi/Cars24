@@ -1,10 +1,10 @@
-name: Deploy to Vercel
+name: Build & Test
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ dev, main, master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ dev, main, master ]
 
 jobs:
   build:
@@ -32,3 +32,9 @@ jobs:
     - name: Type check
       run: npm run typecheck
       continue-on-error: true
+
+    - name: Check if build was successful
+      if: failure()
+      run: |
+        echo "Build failed. Please check the logs above for details."
+        exit 1
