@@ -3,3 +3,6 @@ node_modules/
 .turbo/
 dist/
 cars24-growth-operator/
+.next/
+*.log
+.DS_Store
