@@ -6,3 +6,4 @@ cars24-growth-operator/
 .next/
 *.log
 .DS_Store
+.vercel

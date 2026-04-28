@@ -35,7 +35,7 @@ type Campaign = {
 
 type StatusData = {
   diagnosis: Array<{ campaignId: string; funnel: string; geo: string; issues: any[]; recommendedActions: any[] }>;
-  metrics: Array<{ campaignId: string; funnel: string; geo: string; spend: number; cpl: number; cma: number }>;
+  metrics: Array<{ campaignId: string; campaignName?: string; funnel: string; geo: string; spend: number; cpl: number; cma: number }>;
   allocations: Array<{ campaignId: string; funnel: string; geo: string }>;
 };
 
