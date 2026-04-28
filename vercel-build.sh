@@ -7,7 +7,7 @@ echo "Node version: $(node --version)"
 echo "npm version: $(npm --version)"
 
 echo "Installing dependencies..."
-npm ci
+npm ci --include=dev
 
 echo "Building shared package..."
 cd packages/shared
