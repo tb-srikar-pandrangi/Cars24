@@ -1,49 +1,164 @@
-/**
- * Home / Live Event Feed view.
- * Real-time streaming of all orchestrator events via SSE.
- */
 'use client';
 
 import Link from 'next/link';
 import { EventFeed } from '@/components/EventFeed';
+import { useState } from 'react';
 
 export default function Home() {
-  return (
-    <div style={{ display: 'flex', height: '100vh', background: '#0c0c0e' }}>
-      {/* Sidebar */}
-      <nav style={{ width: '180px', background: '#141416', borderRight: '1px solid #2a2a2d', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
-        <div style={{ fontSize: '10px', color: '#888', fontWeight: 600, textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.05em' }}>Navigation</div>
-        <Link href="/" style={{ padding: '8px 10px', background: '#f5a62320', color: '#f5a623', borderRadius: '4px', textDecoration: 'none', fontSize: '12px', fontWeight: 500, border: '1px solid #f5a62340' }}>
-          Live Feed
-        </Link>
-        <Link href="/funnels" style={{ padding: '8px 10px', color: '#888', borderRadius: '4px', textDecoration: 'none', fontSize: '12px', transition: 'all 0.15s ease', border: '1px solid transparent' }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#2a2a2d'; (e.currentTarget as HTMLElement).style.color = '#f0f0f0'; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#888'; }}>
-          Funnel Health
-        </Link>
-        <Link href="/geo" style={{ padding: '8px 10px', color: '#888', borderRadius: '4px', textDecoration: 'none', fontSize: '12px', transition: 'all 0.15s ease', border: '1px solid transparent' }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#2a2a2d'; (e.currentTarget as HTMLElement).style.color = '#f0f0f0'; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#888'; }}>
-          Geo Heatmap
-        </Link>
+  const [activeNav, setActiveNav] = useState('feed');
 
-        <div style={{ borderTop: '1px solid #2a2a2d', marginTop: '16px', paddingTop: '16px', fontSize: '10px', color: '#666' }}>
-          <div style={{ color: '#888', fontWeight: 600, marginBottom: '8px' }}>Funnels</div>
-          {['SELL', 'BUY', 'FINANCE', 'SERVICES'].map((f) => (
-            <div key={f} style={{ padding: '4px 8px', fontSize: '11px', color: '#888', cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#f0f0f0'; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#888'; }}>
-              {f}
-            </div>
-          ))}
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f5f5f7' }}>
+      {/* Sidebar */}
+      <nav
+        style={{
+          width: '240px',
+          background: '#ffffff',
+          borderRight: '1px solid #e5e5e7',
+          padding: '24px 16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0',
+          overflowY: 'auto',
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.04)',
+        }}
+      >
+        {/* Logo */}
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ fontSize: '13px', fontWeight: 700, color: '#1d1d1f', letterSpacing: '-0.3px' }}>
+            CARS24
+          </div>
+          <div style={{ fontSize: '10px', color: '#666', marginTop: '4px', fontWeight: 500 }}>
+            Growth Operator
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ fontSize: '11px', color: '#666', fontWeight: 600, textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.5px' }}>
+            Main
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {[
+              { id: 'feed', label: 'Live Feed', icon: '📊' },
+              { id: 'funnels', label: 'Funnel Health', icon: '📈' },
+              { id: 'geo', label: 'Geo Heatmap', icon: '🗺️' },
+            ].map(({ id, label, icon }) => (
+              <Link
+                key={id}
+                href={id === 'feed' ? '/' : `/${id}`}
+                style={{
+                  padding: '10px 12px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontSize: '13px',
+                  fontWeight: activeNav === id ? 600 : 500,
+                  color: activeNav === id ? '#ff6b35' : '#1d1d1f',
+                  background: activeNav === id ? '#fff3e0' : 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                }}
+                onMouseEnter={(e) => {
+                  if (activeNav !== id) {
+                    (e.currentTarget as HTMLElement).style.background = '#f5f5f7';
+                    (e.currentTarget as HTMLElement).style.color = '#ff6b35';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeNav !== id) {
+                    (e.currentTarget as HTMLElement).style.background = 'transparent';
+                    (e.currentTarget as HTMLElement).style.color = '#1d1d1f';
+                  }
+                }}
+              >
+                <span>{icon}</span>
+                {label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Funnels Section */}
+        <div>
+          <div style={{ fontSize: '11px', color: '#666', fontWeight: 600, textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.5px' }}>
+            Funnels
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {['SELL', 'BUY', 'FINANCE', 'SERVICES'].map((f) => (
+              <div
+                key={f}
+                style={{
+                  padding: '8px 12px',
+                  fontSize: '12px',
+                  color: '#666',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  borderRadius: '4px',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = '#f5f5f7';
+                  (e.currentTarget as HTMLElement).style.color = '#ff6b35';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = 'transparent';
+                  (e.currentTarget as HTMLElement).style.color = '#666';
+                }}
+              >
+                {f}
+              </div>
+            ))}
+          </div>
         </div>
       </nav>
 
-      {/* Main content */}
+      {/* Main Content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Header */}
-        <div style={{ padding: '16px', borderBottom: '1px solid #2a2a2d', background: '#0c0c0e' }}>
-          <h1 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: '#f0f0f0' }}>CARS24 Growth Operator</h1>
-          <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#888' }}>Real-time performance intelligence</p>
+        <div
+          style={{
+            padding: '20px 32px',
+            borderBottom: '1px solid #e5e5e7',
+            background: '#ffffff',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+          }}
+        >
+          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600, color: '#1d1d1f' }}>
+            Growth Dashboard
+          </h1>
+          <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#666' }}>
+            Real-time performance metrics and actionable insights
+          </p>
         </div>
 
-        {/* Event feed */}
-        <EventFeed />
+        {/* Content */}
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <EventFeed />
+        </div>
       </div>
+
+      <style>{`
+        ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+          background: #f5f5f7;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #d0d0d3;
+          border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #a0a0a3;
+        }
+      `}</style>
     </div>
   );
 }
