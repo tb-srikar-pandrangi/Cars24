@@ -87,7 +87,7 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
         const res = await fetch('/api/status');
         const json = (await res.json()) as StatusData;
         const filtered = json.metrics
-          .filter((m) => m.funnel === funnel)
+          .filter((m) => m.funnel.toUpperCase() === funnel)
           .map((m) => ({
             campaignId: m.campaignId,
             campaignName: m.campaignName || `Campaign ${m.campaignId}`,
