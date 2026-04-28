@@ -137,6 +137,13 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Info Banner */}
+        <div style={{ padding: '16px 32px', background: '#f0f7ff', borderBottom: '1px solid #d4e8ff' }}>
+          <div style={{ fontSize: '12px', color: '#0055cc', lineHeight: '1.5' }}>
+            <strong>🎯 What is this dashboard?</strong> The CARS24 Growth Operator is an AI-powered system that monitors all customer acquisition campaigns across four business funnels (Sell, Buy, Finance, Services). It automatically diagnoses conversion bottlenecks, recommends budget reallocations, and tracks campaign health in real-time. The system continuously learns from campaign performance to optimize Cost per Lead (CPL) and Cost per Appointment (CMA).
+          </div>
+        </div>
+
         {/* Content */}
         <div style={{ flex: 1, overflow: 'auto' }}>
           <EventFeed />

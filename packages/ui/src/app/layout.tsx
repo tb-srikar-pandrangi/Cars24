@@ -21,12 +21,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <style>{`
           * { box-sizing: border-box; }
           html { font-size: 14px; }
-          body { margin: 0; background: #0c0c0e; color: #f0f0f0; font-family: 'IBM Plex Sans', sans-serif; }
+          body { margin: 0; background: #f5f5f7; color: #1d1d1f; font-family: 'IBM Plex Sans', sans-serif; }
           .font-mono { font-family: 'IBM Plex Mono', monospace; }
-          .color-accent { color: #f5a623; }
-          .color-critical { color: #e63946; }
-          .color-warning { color: #ff9f1c; }
-          .color-ok { color: #2dc653; }
+          .color-accent { color: #ff6b35; }
+          .color-critical { color: #e74c3c; }
+          .color-warning { color: #f39c12; }
+          .color-ok { color: #27ae60; }
         `}</style>
       </head>
       <body>
