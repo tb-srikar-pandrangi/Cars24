@@ -49,7 +49,7 @@ export function EventFeed() {
 
   useEffect(() => {
     fetchData();
-    pollIntervalRef.current = setInterval(fetchData, 5000);
+    pollIntervalRef.current = setInterval(fetchData, 30000);
     const timerRef = setInterval(() => {
       setSecondsAgo((prev) => prev + 1);
     }, 1000);
@@ -76,17 +76,17 @@ export function EventFeed() {
   };
 
   return (
-    <div style={{ background: '#f5f5f7', minHeight: '100vh', padding: '32px' }}>
+    <div style={{ background: '#ffffff', minHeight: '100vh', padding: '32px 32px 48px 32px' }}>
       {/* Top Status Bar */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '32px',
-          padding: '16px 24px',
+          marginBottom: '24px',
+          padding: '16px 20px',
           background: '#ffffff',
-          borderRadius: '8px',
+          borderRadius: '10px',
           border: '1px solid #e5e5e7',
           boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
         }}
@@ -104,66 +104,89 @@ export function EventFeed() {
                 animation: status === 'live' ? 'pulse 2s infinite' : 'none',
               }}
             />
-            <span style={{ fontSize: '13px', fontWeight: 500, color: '#1d1d1f' }}>
-              {status === 'live' && 'Live'}
-              {status === 'error' && 'Error'}
-              {status === 'loading' && 'Loading'}
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#1d1d1f' }}>
+              {status === 'live' && '● Live Data'}
+              {status === 'error' && '● Connection Error'}
+              {status === 'loading' && '⏳ Loading...'}
             </span>
           </div>
-          <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#666' }}>
-            Last updated {secondsAgo}s ago
+          <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: '#999' }}>
+            Last updated {secondsAgo}s ago • Data refreshes every 30 seconds
           </p>
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI Cards Section */}
+      <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: '#1d1d1f' }}>
+        Campaign Performance Snapshot
+      </h2>
       {metrics && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '32px' }}>
           {[
-            { label: 'Impressions', value: `${(metrics.impressions / 1000).toFixed(0)}k`, unit: '', color: '#3498db' },
-            { label: 'Click Rate', value: ((metrics.clicks / metrics.impressions) * 100).toFixed(1), unit: '%', color: '#9b59b6' },
-            { label: 'Leads Generated', value: metrics.leads.toString(), unit: '', color: '#27ae60' },
-            { label: 'Cost per Lead', value: `₹${metrics.cpl}`, unit: '', color: '#e74c3c' },
-            { label: 'Spend', value: `₹${(metrics.spend / 1000).toFixed(0)}k`, unit: '', color: '#f39c12' },
-            { label: 'ROAS', value: metrics.roas.toFixed(1), unit: 'x', color: '#1abc9c' },
-          ].map(({ label, value, unit, color }) => (
+            { label: 'Impressions', value: `${(metrics.impressions / 1000).toFixed(0)}k`, description: 'Ad views', color: '#3498db' },
+            { label: 'Click Rate', value: ((metrics.clicks / metrics.impressions) * 100).toFixed(1), description: '%', color: '#9b59b6' },
+            { label: 'Leads', value: metrics.leads.toString(), description: 'Total qualified leads', color: '#27ae60' },
+            { label: 'Cost/Lead', value: `₹${metrics.cpl}`, description: 'CPL metric', color: '#ff6b35' },
+          ].map(({ label, value, description, color }) => (
             <div
               key={label}
               style={{
-                padding: '20px',
+                padding: '16px',
                 background: '#ffffff',
-                borderRadius: '8px',
-                border: `2px solid ${color}20`,
+                borderRadius: '10px',
+                border: '1px solid #e5e5e7',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
               }}
             >
-              <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px', fontWeight: 500 }}>
+              <div style={{ fontSize: '11px', color: '#999', marginBottom: '8px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3px' }}>
                 {label}
               </div>
-              <div style={{ fontSize: '24px', fontWeight: 700, color, fontFamily: "'IBM Plex Mono', monospace" }}>
+              <div style={{ fontSize: '22px', fontWeight: 700, color: color, fontFamily: "'IBM Plex Mono', monospace", marginBottom: '6px' }}>
                 {value}
-                <span style={{ fontSize: '14px', marginLeft: '4px' }}>{unit}</span>
+              </div>
+              <div style={{ fontSize: '11px', color: '#666', fontWeight: 400 }}>
+                {description}
               </div>
             </div>
           ))}
         </div>
+      ) || (
+        <div style={{ padding: '32px', textAlign: 'center', background: '#f9f9fb', borderRadius: '10px', marginBottom: '32px', border: '1px solid #e5e5e7' }}>
+          <div style={{ fontSize: '13px', color: '#999' }}>Loading campaign data...</div>
+        </div>
       )}
 
-      {/* Issues & Allocations Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+      {/* Issues & Actions Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
         {/* Health Issues Section */}
         <div
           style={{
             padding: '24px',
             background: '#ffffff',
-            borderRadius: '8px',
+            borderRadius: '12px',
             border: '1px solid #e5e5e7',
             boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
           }}
         >
-          <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600, color: '#1d1d1f' }}>
-            ⚠️ Health Issues
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#1d1d1f' }}>
+              Funnel Diagnostics
+            </h2>
+            <span style={{ fontSize: '12px', color: '#999', fontWeight: 400 }}>AI-Detected Issues</span>
+          </div>
+          <p style={{ margin: '0 0 16px 0', fontSize: '12px', color: '#999' }}>
+            Conversion bottlenecks detected across campaigns
+          </p>
 
           {diagnosis && diagnosis.issues.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -206,14 +229,20 @@ export function EventFeed() {
           style={{
             padding: '24px',
             background: '#ffffff',
-            borderRadius: '8px',
+            borderRadius: '12px',
             border: '1px solid #e5e5e7',
             boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
           }}
         >
-          <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600, color: '#1d1d1f' }}>
-            ✅ Recent Actions
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#1d1d1f' }}>
+              Recommended Actions
+            </h2>
+            <span style={{ fontSize: '12px', color: '#27ae60', fontWeight: 600 }}>Optimizations</span>
+          </div>
+          <p style={{ margin: '0 0 16px 0', fontSize: '12px', color: '#999' }}>
+            Budget reallocation & campaign adjustments
+          </p>
 
           {allocations.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

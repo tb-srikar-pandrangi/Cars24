@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { EventFeed } from '@/components/EventFeed';
+import { EventStream } from '@/components/EventStream';
 import { useState } from 'react';
 
 export default function Home() {
   const [activeNav, setActiveNav] = useState('feed');
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f5f5f7' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#ffffff' }}>
       {/* Sidebar */}
       <nav
         style={{
@@ -123,30 +123,48 @@ export default function Home() {
         {/* Header */}
         <div
           style={{
-            padding: '20px 32px',
+            padding: '28px 32px',
             borderBottom: '1px solid #e5e5e7',
             background: '#ffffff',
             boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
           }}
         >
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600, color: '#1d1d1f' }}>
-            Growth Dashboard
+          <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 700, color: '#1d1d1f', letterSpacing: '-0.5px' }}>
+            Live Feed
           </h1>
-          <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#666' }}>
-            Real-time performance metrics and actionable insights
+          <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#666', fontWeight: 400 }}>
+            Real-time campaign performance across all funnels
           </p>
         </div>
 
-        {/* Info Banner */}
-        <div style={{ padding: '16px 32px', background: '#f0f7ff', borderBottom: '1px solid #d4e8ff' }}>
-          <div style={{ fontSize: '12px', color: '#0055cc', lineHeight: '1.5' }}>
-            <strong>🎯 What is this dashboard?</strong> The CARS24 Growth Operator is an AI-powered system that monitors all customer acquisition campaigns across four business funnels (Sell, Buy, Finance, Services). It automatically diagnoses conversion bottlenecks, recommends budget reallocations, and tracks campaign health in real-time. The system continuously learns from campaign performance to optimize Cost per Lead (CPL) and Cost per Appointment (CMA).
+        {/* Dashboard Overview Banner */}
+        <div style={{ padding: '20px 32px', background: '#fff3e0', borderBottom: '1px solid #ffe8cc' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+            <div>
+              <h3 style={{ margin: '0 0 12px 0', fontSize: '13px', fontWeight: 700, color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                What this agent does
+              </h3>
+              <p style={{ margin: 0, fontSize: '13px', color: '#1d1d1f', lineHeight: '1.6', fontWeight: 400 }}>
+                The CARS24 Growth Operator runs 4 AI agents in parallel, 24/7. It detects campaign failures before they compound — CPL spikes, CMA collapse, creative fatigue, and Spinny conquest activity. When an ad's copy score drops below threshold, it automatically regenerates the creative in CARS24's brand voice. When a geo stops converting, it flags the budget for reallocation. The team sees decisions; the agent does the work.
+              </p>
+            </div>
+            <div>
+              <h3 style={{ margin: '0 0 12px 0', fontSize: '13px', fontWeight: 700, color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Key Terms
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12px', color: '#1d1d1f' }}>
+                <div><strong>CPL:</strong> Cost per Lead — ad spend ÷ leads generated</div>
+                <div><strong>CMA:</strong> Contribution Margin per Acquisition — net margin retained after all acquisition costs. <strong>This is the north star metric.</strong></div>
+                <div><strong>Severity:</strong> 🟢 OK · 🟡 Warning · 🔴 Critical</div>
+                <div><strong>Benchmark:</strong> CARS24's internal performance target per funnel</div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Content */}
         <div style={{ flex: 1, overflow: 'auto' }}>
-          <EventFeed />
+          <EventStream />
         </div>
       </div>
 

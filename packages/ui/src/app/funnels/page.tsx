@@ -51,18 +51,30 @@ export default function FunnelsPage() {
         const json = (await res.json()) as StatusData;
         setData(json);
       } catch {
-        // fallback to dummy data
+        // fallback to realistic Cars24 FY25 data
         setData({
           diagnosis: [],
           metrics: [
-            {
-              campaignId: 'camp_001',
-              funnel: 'SELL',
-              geo: 'bengaluru',
-              spend: 45000,
-              cpl: 1184,
-              cma: 2353,
-            },
+            // SELL - Tier-1 metros & tier-2 growth cities
+            { campaignId: 'camp_sell_001', campaignName: 'SELL_Bangalore_Google_Branded', funnel: 'SELL', geo: 'bangalore', spend: 68000, cpl: 1308, cma: 2485 },
+            { campaignId: 'camp_sell_002', campaignName: 'SELL_Pune_Meta_LeadGen', funnel: 'SELL', geo: 'pune', spend: 42000, cpl: 1105, cma: 2280 },
+            { campaignId: 'camp_sell_003', campaignName: 'SELL_Hyderabad_Google_NonBranded', funnel: 'SELL', geo: 'hyderabad', spend: 48000, cpl: 1143, cma: 2350 },
+            { campaignId: 'camp_sell_004', campaignName: 'SELL_Ahmedabad_Meta_Retargeting', funnel: 'SELL', geo: 'ahmedabad', spend: 35000, cpl: 1250, cma: 2420 },
+            // BUY - Higher CMA due to test drive logistics
+            { campaignId: 'camp_buy_001', campaignName: 'BUY_Bangalore_Google_Search', funnel: 'BUY', geo: 'bangalore', spend: 62000, cpl: 1938, cma: 3880 },
+            { campaignId: 'camp_buy_002', campaignName: 'BUY_Mumbai_Meta_Awareness', funnel: 'BUY', geo: 'mumbai', spend: 55000, cpl: 1897, cma: 3920 },
+            { campaignId: 'camp_buy_003', campaignName: 'BUY_Delhi_Google_Branded', funnel: 'BUY', geo: 'delhi', spend: 45000, cpl: 2143, cma: 3650 },
+            { campaignId: 'camp_buy_004', campaignName: 'BUY_GujaratRegion_Meta_LookAlike', funnel: 'BUY', geo: 'gujaratregion', spend: 38000, cpl: 1727, cma: 3750 },
+            // FINANCE - Loans24 products (lowest CPL, focus on app-to-approval)
+            { campaignId: 'camp_fin_001', campaignName: 'FINANCE_Mumbai_Google_Search', funnel: 'FINANCE', geo: 'mumbai', spend: 52000, cpl: 765, cma: 1920 },
+            { campaignId: 'camp_fin_002', campaignName: 'FINANCE_Bangalore_Meta_EMI', funnel: 'FINANCE', geo: 'bangalore', spend: 48000, cpl: 889, cma: 1850 },
+            { campaignId: 'camp_fin_003', campaignName: 'FINANCE_TamilNadu_Google_Keywords', funnel: 'FINANCE', geo: 'tamilnadu', spend: 42000, cpl: 875, cma: 1910 },
+            { campaignId: 'camp_fin_004', campaignName: 'FINANCE_Telangana_Meta_PostTxn', funnel: 'FINANCE', geo: 'telangana', spend: 35000, cpl: 921, cma: 1880 },
+            // SERVICES - Post-transaction (warranty, maintenance)
+            { campaignId: 'camp_svc_001', campaignName: 'SERVICES_Maharashtra_Google_Remarketing', funnel: 'SERVICES', geo: 'maharashtra', spend: 42000, cpl: 1750, cma: 3280 },
+            { campaignId: 'camp_svc_002', campaignName: 'SERVICES_Bangalore_Meta_Bundle', funnel: 'SERVICES', geo: 'bangalore', spend: 38000, cpl: 1727, cma: 3350 },
+            { campaignId: 'camp_svc_003', campaignName: 'SERVICES_TamilNadu_Google_Warranty', funnel: 'SERVICES', geo: 'tamilnadu', spend: 32000, cpl: 1778, cma: 3200 },
+            { campaignId: 'camp_svc_004', campaignName: 'SERVICES_Telangana_Meta_PostTxn', funnel: 'SERVICES', geo: 'telangana', spend: 28000, cpl: 1750, cma: 3150 },
           ],
           allocations: [],
         });
@@ -72,7 +84,7 @@ export default function FunnelsPage() {
     };
 
     fetchStatus();
-    const interval = setInterval(fetchStatus, 15000); // Refetch every 15s
+    const interval = setInterval(fetchStatus, 30000); // Refetch every 30s
     return () => clearInterval(interval);
   }, []);
 
@@ -103,7 +115,7 @@ export default function FunnelsPage() {
 
     campaignsByFunnel[funnel].push({
       campaignId: metric.campaignId,
-      campaignName: `Campaign ${metric.campaignId.replace('camp_', '')}`,
+      campaignName: (metric as any).campaignName || `Campaign ${metric.campaignId.replace('camp_', '')}`,
       geo: metric.geo,
       spend: metric.spend,
       cpl: metric.cpl,
@@ -131,7 +143,7 @@ export default function FunnelsPage() {
     : null;
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f5f5f7' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#ffffff' }}>
       {/* Sidebar */}
       <nav
         style={{
@@ -212,8 +224,9 @@ export default function FunnelsPage() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {['SELL', 'BUY', 'FINANCE', 'SERVICES'].map((f) => (
-              <div
+              <Link
                 key={f}
+                href={`/funnels/${f.toLowerCase()}`}
                 style={{
                   padding: '8px 12px',
                   fontSize: '12px',
@@ -221,6 +234,8 @@ export default function FunnelsPage() {
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   borderRadius: '4px',
+                  textDecoration: 'none',
+                  display: 'block',
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.background = '#f5f5f7';
@@ -232,7 +247,7 @@ export default function FunnelsPage() {
                 }}
               >
                 {f}
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -243,29 +258,22 @@ export default function FunnelsPage() {
         {/* Header */}
         <div
           style={{
-            padding: '20px 32px',
+            padding: '24px 32px',
             borderBottom: '1px solid #e5e5e7',
             background: '#ffffff',
             boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
           }}
         >
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600, color: '#1d1d1f' }}>
-            Funnel Health Analysis
+          <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 700, color: '#1d1d1f', letterSpacing: '-0.5px' }}>
+            Funnel Health
           </h1>
-          <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#666' }}>
-            Monitor campaign performance across SELL, BUY, FINANCE, and SERVICES funnels
+          <p style={{ margin: '8px 0 0 0', fontSize: '13px', color: '#666', fontWeight: 400 }}>
+            Campaign performance across SELL, BUY, FINANCE, and SERVICES
           </p>
         </div>
 
-        {/* Info Banner */}
-        <div style={{ padding: '16px 32px', background: '#f0f7ff', borderBottom: '1px solid #d4e8ff' }}>
-          <div style={{ fontSize: '12px', color: '#0055cc', lineHeight: '1.5' }}>
-            <strong>📊 What you're seeing:</strong> This dashboard tracks the health of all customer acquisition funnels. Each funnel represents a different business line (Sell, Buy, Finance, Services). The system automatically diagnoses issues in conversion stages and recommends budget reallocations to optimize Cost per Lead (CPL) and Cost per Appointment (CMA).
-          </div>
-        </div>
-
-        {/* 4-column grid */}
-        <div style={{ flex: 1, padding: '32px', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+        {/* 2x2 grid layout - better spacing and sidebar accessibility */}
+        <div style={{ flex: 1, padding: '32px', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
           {(['SELL', 'BUY', 'FINANCE', 'SERVICES'] as Funnel[]).map((funnel) => (
             <FunnelColumn
               key={funnel}
@@ -310,7 +318,7 @@ export default function FunnelsPage() {
           height: 8px;
         }
         ::-webkit-scrollbar-track {
-          background: #f5f5f7;
+          background: #ffffff;
         }
         ::-webkit-scrollbar-thumb {
           background: #d0d0d3;

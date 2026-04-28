@@ -1,8 +1,3 @@
-/**
- * SeverityBadge — color-coded status indicator.
- * Maps severity to CARS24 color palette with optional pulse animation.
- */
-
 type Props = {
   severity: 'ok' | 'warning' | 'critical';
   pulse?: boolean;
@@ -10,19 +5,26 @@ type Props = {
 };
 
 const COLORS = {
-  ok: '#2dc653',
-  warning: '#ff9f1c',
-  critical: '#e63946',
+  ok: '#27ae60',
+  warning: '#f39c12',
+  critical: '#e74c3c',
+};
+
+const BG_COLORS = {
+  ok: '#d5f4e6',
+  warning: '#fef5e7',
+  critical: '#fadbd8',
 };
 
 const LABELS = {
-  ok: 'OK',
+  ok: 'Healthy',
   warning: 'Warning',
   critical: 'Critical',
 };
 
 export function SeverityBadge({ severity, pulse, compact }: Props) {
   const color = COLORS[severity];
+  const bgColor = BG_COLORS[severity];
   const label = LABELS[severity];
 
   return (
@@ -31,14 +33,15 @@ export function SeverityBadge({ severity, pulse, compact }: Props) {
         display: 'inline-flex',
         alignItems: 'center',
         gap: compact ? '4px' : '6px',
-        padding: compact ? '2px 6px' : '4px 8px',
-        backgroundColor: `${color}15`,
-        border: `1px solid ${color}40`,
-        borderRadius: '4px',
+        padding: compact ? '4px 8px' : '6px 12px',
+        backgroundColor: bgColor,
+        border: `1px solid ${color}30`,
+        borderRadius: '12px',
         fontSize: compact ? '11px' : '12px',
         color,
-        fontWeight: 500,
+        fontWeight: 600,
         animation: pulse ? `pulse-${severity} 2s infinite` : undefined,
+        whiteSpace: 'nowrap',
       }}
     >
       <span
@@ -48,6 +51,7 @@ export function SeverityBadge({ severity, pulse, compact }: Props) {
           height: compact ? '6px' : '8px',
           borderRadius: '50%',
           backgroundColor: color,
+          flexShrink: 0,
         }}
       />
       {!compact && label}

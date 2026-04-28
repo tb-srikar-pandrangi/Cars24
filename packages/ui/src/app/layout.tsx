@@ -17,11 +17,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet" />
         <style>{`
           * { box-sizing: border-box; }
           html { font-size: 14px; }
-          body { margin: 0; background: #f5f5f7; color: #1d1d1f; font-family: 'IBM Plex Sans', sans-serif; }
+          body { margin: 0; background: #ffffff; color: #1d1d1f; font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; }
           .font-mono { font-family: 'IBM Plex Mono', monospace; }
           .color-accent { color: #ff6b35; }
           .color-critical { color: #e74c3c; }

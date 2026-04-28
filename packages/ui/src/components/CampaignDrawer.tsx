@@ -6,7 +6,6 @@
  */
 
 import { FunnelStageMini } from './FunnelStageMini';
-import { SeverityBadge } from './SeverityBadge';
 
 type Props = {
   campaignId: string;
@@ -34,6 +33,28 @@ type Props = {
   onApplyAllocation: () => void;
   onClose: () => void;
 };
+
+function getPerformanceLabel(severity: 'ok' | 'warning' | 'critical'): { text: string; bgColor: string; textColor: string } {
+  switch (severity) {
+    case 'ok':
+      return { text: 'On Target', bgColor: '#f0fdf4', textColor: '#166534' };
+    case 'warning':
+      return { text: 'Needs Review', bgColor: '#fefce8', textColor: '#b45309' };
+    case 'critical':
+      return { text: 'Critical', bgColor: '#fef2f2', textColor: '#991b1b' };
+  }
+}
+
+function getIssueLabel(severity: 'ok' | 'warning' | 'critical'): { text: string; bgColor: string; textColor: string } {
+  switch (severity) {
+    case 'ok':
+      return { text: 'OK', bgColor: '#d1fae5', textColor: '#065f46' };
+    case 'warning':
+      return { text: 'Warning', bgColor: '#fef3c7', textColor: '#92400e' };
+    case 'critical':
+      return { text: 'Critical', bgColor: '#fee2e2', textColor: '#991b1b' };
+  }
+}
 
 export function CampaignDrawer({
   campaignName,
@@ -105,9 +126,27 @@ export function CampaignDrawer({
               <h3 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 600, color: '#f0f0f0', textTransform: 'uppercase' }}>Issues</h3>
               {issues.map((issue, i) => (
                 <div key={i} style={{ fontSize: '11px', marginBottom: '8px', padding: '8px', background: '#1a1a1d', borderRadius: '4px', borderLeft: '2px solid #f5a623' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', alignItems: 'center' }}>
                     <span style={{ color: '#f0f0f0' }}>{issue.stage}</span>
-                    <SeverityBadge severity={issue.severity} compact />
+                    {(() => {
+                      const label = getIssueLabel(issue.severity);
+                      return (
+                        <div
+                          style={{
+                            padding: '2px 6px',
+                            background: label.bgColor,
+                            color: label.textColor,
+                            borderRadius: '3px',
+                            fontSize: '9px',
+                            fontWeight: 600,
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0
+                          }}
+                        >
+                          {label.text}
+                        </div>
+                      );
+                    })()}
                   </div>
                   <div style={{ color: '#888' }}>{issue.description}</div>
                   <div style={{ color: '#f5a623', fontFamily: "'IBM Plex Mono', monospace", marginTop: '4px' }}>
