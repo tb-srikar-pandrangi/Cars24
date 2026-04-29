@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'next/navigation';
 import type { Funnel } from '@cars24/shared';
 
 type Campaign = {
@@ -76,12 +77,16 @@ function getPerformanceLabel(current: number, benchmark: number, metricType: 'co
   }
 }
 
-export default function FunnelDetailPage({ params }: { params: { funnel: string } }) {
-  const funnel = params.funnel.toUpperCase() as Funnel;
+export default function FunnelDetailPage() {
+  const params = useParams();
+  const funnelParam = (params?.funnel as string) || '';
+  const funnel = funnelParam.toUpperCase();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!funnel || funnel.length === 0) return;
+
     const fetchStatus = async () => {
       try {
         const res = await fetch('/api/status');
@@ -99,7 +104,6 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
           }));
         setCampaigns(filtered);
       } catch {
-        // Fallback mock data
         const mockCampaigns: Record<string, Campaign[]> = {
           SELL: [
             { campaignId: 'camp_001', campaignName: 'SELL_Bengaluru_Meta_LeadGen', geo: 'Bengaluru', spend: 45000, cpl: 1184, cma: 2353 },
@@ -138,12 +142,15 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
   const avgCMA = campaigns.length > 0 ? Math.round(campaigns.reduce((sum, c) => sum + c.cma, 0) / campaigns.length) : 0;
   const avgCPL = campaigns.length > 0 ? Math.round(campaigns.reduce((sum, c) => sum + c.cpl, 0) / campaigns.length) : 0;
 
-  const cplPerf = getPerformanceLabel(avgCPL, benchmark.cpl, 'cost');
-  const cmaPerf = getPerformanceLabel(avgCMA, benchmark.cma, 'margin');
+  const cplPerf = benchmark ? getPerformanceLabel(avgCPL, benchmark.cpl, 'cost') : { text: 'N/A', color: '#999' };
+  const cmaPerf = benchmark ? getPerformanceLabel(avgCMA, benchmark.cma, 'margin') : { text: 'N/A', color: '#999' };
+
+  if (!funnel) {
+    return <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', color: '#999' }}>Loading...</div>;
+  }
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#ffffff' }}>
-      {/* Sidebar */}
       <nav
         style={{
           width: '240px',
@@ -189,9 +196,9 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
                   borderRadius: '6px',
                   textDecoration: 'none',
                   fontSize: '13px',
-                  fontWeight: id === 'funnels' ? 600 : 500,
-                  color: id === 'funnels' ? '#ff6b35' : '#1d1d1f',
-                  background: id === 'funnels' ? '#fff3e0' : 'transparent',
+                  fontWeight: 500,
+                  color: '#1d1d1f',
+                  background: 'transparent',
                   border: 'none',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
@@ -215,7 +222,7 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
             {['SELL', 'BUY', 'FINANCE', 'SERVICES'].map((f) => (
               <Link
                 key={f}
-                href={`/funnels/${f.toLowerCase()}`}
+                href={`/${f.toLowerCase()}`}
                 style={{
                   padding: '8px 12px',
                   fontSize: '12px',
@@ -235,9 +242,7 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
         </div>
       </nav>
 
-      {/* Main Content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Header */}
         <div
           style={{
             padding: '24px 32px',
@@ -254,19 +259,16 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
           </p>
         </div>
 
-        {/* Content */}
         <div style={{ flex: 1, overflow: 'auto', padding: '32px' }}>
           {loading ? (
             <div style={{ textAlign: 'center', color: '#999' }}>Loading...</div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
-              {/* Left: Funnel Overview */}
               <div>
                 <h2 style={{ margin: '0 0 24px 0', fontSize: '18px', fontWeight: 700, color: '#1d1d1f' }}>
                   Funnel Overview
                 </h2>
 
-                {/* Key Metrics */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '32px' }}>
                   <div
                     style={{
@@ -283,7 +285,7 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
                       ₹{avgCPL.toLocaleString('en-IN')}
                     </div>
                     <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
-                      Benchmark: ₹{benchmark.cpl.toLocaleString('en-IN')}
+                      Benchmark: ₹{benchmark?.cpl.toLocaleString('en-IN') || 'N/A'}
                     </div>
                     <div style={{ fontSize: '12px', fontWeight: 600, color: cplPerf.color }}>
                       {cplPerf.text}
@@ -305,7 +307,7 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
                       ₹{avgCMA.toLocaleString('en-IN')}
                     </div>
                     <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
-                      Benchmark: ₹{benchmark.cma.toLocaleString('en-IN')}
+                      Benchmark: ₹{benchmark?.cma.toLocaleString('en-IN') || 'N/A'}
                     </div>
                     <div style={{ fontSize: '12px', fontWeight: 600, color: cmaPerf.color }}>
                       {cmaPerf.text}
@@ -313,13 +315,12 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
                   </div>
                 </div>
 
-                {/* Steps to Increase CMA */}
                 <div>
                   <h3 style={{ margin: '0 0 16px 0', fontSize: '14px', fontWeight: 700, color: '#1d1d1f' }}>
                     Steps to Increase CMA
                   </h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {steps.map((step, i) => (
+                    {steps?.map((step, i) => (
                       <div
                         key={i}
                         style={{
@@ -357,7 +358,6 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
                 </div>
               </div>
 
-              {/* Right: Campaign Details */}
               <div>
                 <h2 style={{ margin: '0 0 24px 0', fontSize: '18px', fontWeight: 700, color: '#1d1d1f' }}>
                   Campaign Performance by City
@@ -365,8 +365,8 @@ export default function FunnelDetailPage({ params }: { params: { funnel: string 
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {campaigns.map((campaign) => {
-                    const cplLabel = getPerformanceLabel(campaign.cpl, benchmark.cpl, 'cost');
-                    const cmaLabel = getPerformanceLabel(campaign.cma, benchmark.cma, 'margin');
+                    const cplLabel = benchmark ? getPerformanceLabel(campaign.cpl, benchmark.cpl, 'cost') : { text: 'N/A', color: '#999' };
+                    const cmaLabel = benchmark ? getPerformanceLabel(campaign.cma, benchmark.cma, 'margin') : { text: 'N/A', color: '#999' };
 
                     return (
                       <div
