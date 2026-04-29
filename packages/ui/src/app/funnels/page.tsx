@@ -1,14 +1,14 @@
 'use client';
 
 /**
- * Funnel Health Grid view — 4-column layout per funnel.
- * Fetches status from /api/status, displays campaigns with inline drawer.
+ * Funnel Health view — Grid with detailed views and campaign inspector.
  */
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { FunnelColumn } from '@/components/FunnelColumn';
 import { CampaignDrawer } from '@/components/CampaignDrawer';
+import { FunnelDetail } from '@/components/FunnelDetail';
 import type { Funnel } from '@cars24/shared';
 
 const FUNNEL_COLORS: Record<Funnel, string> = {
@@ -42,6 +42,7 @@ type StatusData = {
 export default function FunnelsPage() {
   const [data, setData] = useState<StatusData | null>(null);
   const [selectedCampaign, setSelectedCampaign] = useState<string | null>(null);
+  const [selectedFunnelDetail, setSelectedFunnelDetail] = useState<Funnel | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -218,39 +219,6 @@ export default function FunnelsPage() {
           </div>
         </div>
 
-        <div>
-          <div style={{ fontSize: '11px', color: '#666', fontWeight: 600, textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.5px' }}>
-            Funnels
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {['SELL', 'BUY', 'FINANCE', 'SERVICES'].map((f) => (
-              <Link
-                key={f}
-                href={`/${f.toLowerCase()}`}
-                style={{
-                  padding: '8px 12px',
-                  fontSize: '12px',
-                  color: '#666',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  borderRadius: '4px',
-                  textDecoration: 'none',
-                  display: 'block',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = '#f5f5f7';
-                  (e.currentTarget as HTMLElement).style.color = '#ff6b35';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = 'transparent';
-                  (e.currentTarget as HTMLElement).style.color = '#666';
-                }}
-              >
-                {f}
-              </Link>
-            ))}
-          </div>
-        </div>
       </nav>
 
       {/* Main content */}
@@ -272,19 +240,70 @@ export default function FunnelsPage() {
           </p>
         </div>
 
-        {/* 2x2 grid layout - better spacing and sidebar accessibility */}
-        <div style={{ flex: 1, padding: '32px', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
-          {(['SELL', 'BUY', 'FINANCE', 'SERVICES'] as Funnel[]).map((funnel) => (
-            <FunnelColumn
-              key={funnel}
-              funnel={funnel}
-              currentCma={getCmaAvg(funnel)}
-              cmaColor={FUNNEL_COLORS[funnel]}
-              campaigns={campaignsByFunnel[funnel]}
-              onCampaignClick={setSelectedCampaign}
-            />
-          ))}
-        </div>
+        {/* Main content area with grid or detail view */}
+        {selectedFunnelDetail ? (
+          // Detail view for selected funnel
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            {/* Back button and header */}
+            <div style={{ padding: '24px 32px', borderBottom: '1px solid #e5e5e7', background: '#ffffff' }}>
+              <button
+                onClick={() => setSelectedFunnelDetail(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#ff6b35',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  padding: 0,
+                  marginBottom: '12px',
+                  textDecoration: 'underline',
+                }}
+              >
+                ← Back to Grid
+              </button>
+              <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#1d1d1f', letterSpacing: '-0.5px' }}>
+                {selectedFunnelDetail} Funnel Details
+              </h2>
+            </div>
+            {/* Render FunnelDetail content */}
+            <div style={{ flex: 1, overflow: 'auto' }}>
+              <FunnelDetail funnel={selectedFunnelDetail} />
+            </div>
+          </div>
+        ) : (
+          // Grid view
+          <div style={{ flex: 1, padding: '32px', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
+            {(['SELL', 'BUY', 'FINANCE', 'SERVICES'] as Funnel[]).map((funnel) => (
+              <div
+                key={funnel}
+                style={{
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                  borderRadius: '12px',
+                  padding: '16px',
+                }}
+                onClick={() => setSelectedFunnelDetail(funnel)}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 16px rgba(0,0,0,0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                }}
+              >
+                <FunnelColumn
+                  funnel={funnel}
+                  currentCma={getCmaAvg(funnel)}
+                  cmaColor={FUNNEL_COLORS[funnel]}
+                  campaigns={campaignsByFunnel[funnel]}
+                  onCampaignClick={setSelectedCampaign}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Campaign drawer */}
