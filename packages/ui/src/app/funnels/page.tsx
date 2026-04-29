@@ -226,7 +226,7 @@ export default function FunnelsPage() {
             {['SELL', 'BUY', 'FINANCE', 'SERVICES'].map((f) => (
               <Link
                 key={f}
-                href={`/funnels/${f.toLowerCase()}`}
+                href={`/${f.toLowerCase()}`}
                 style={{
                   padding: '8px 12px',
                   fontSize: '12px',
