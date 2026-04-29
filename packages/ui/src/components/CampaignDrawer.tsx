@@ -37,22 +37,22 @@ type Props = {
 function getPerformanceLabel(severity: 'ok' | 'warning' | 'critical'): { text: string; bgColor: string; textColor: string } {
   switch (severity) {
     case 'ok':
-      return { text: 'On Target', bgColor: '#f0fdf4', textColor: '#166534' };
+      return { text: 'On Target', bgColor: '#f5f5f5', textColor: '#666666' };
     case 'warning':
-      return { text: 'Needs Review', bgColor: '#fefce8', textColor: '#b45309' };
+      return { text: 'Needs Review', bgColor: '#fff4e6', textColor: '#ff9f1c' };
     case 'critical':
-      return { text: 'Critical', bgColor: '#fef2f2', textColor: '#991b1b' };
+      return { text: 'Critical', bgColor: '#fde8ea', textColor: '#e63946' };
   }
 }
 
 function getIssueLabel(severity: 'ok' | 'warning' | 'critical'): { text: string; bgColor: string; textColor: string } {
   switch (severity) {
     case 'ok':
-      return { text: 'OK', bgColor: '#d1fae5', textColor: '#065f46' };
+      return { text: 'On Target', bgColor: '#f5f5f5', textColor: '#666666' };
     case 'warning':
-      return { text: 'Warning', bgColor: '#fef3c7', textColor: '#92400e' };
+      return { text: 'Needs Review', bgColor: '#fff4e6', textColor: '#ff9f1c' };
     case 'critical':
-      return { text: 'Critical', bgColor: '#fee2e2', textColor: '#991b1b' };
+      return { text: 'Critical', bgColor: '#fde8ea', textColor: '#e63946' };
   }
 }
 

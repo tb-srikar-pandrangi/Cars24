@@ -1,65 +1,48 @@
 type Props = {
-  severity: 'ok' | 'warning' | 'critical';
-  pulse?: boolean;
-  compact?: boolean;
+  label: 'Excellent' | 'On Target' | 'Needs Review' | 'Critical';
 };
 
-const COLORS = {
-  ok: '#27ae60',
-  warning: '#f39c12',
-  critical: '#e74c3c',
+const STYLES = {
+  'Excellent': {
+    bgColor: '#e8f8ee',
+    textColor: '#2dc653',
+    borderColor: '#2dc653',
+  },
+  'On Target': {
+    bgColor: '#f5f5f5',
+    textColor: '#666666',
+    borderColor: '#cccccc',
+  },
+  'Needs Review': {
+    bgColor: '#fff4e6',
+    textColor: '#ff9f1c',
+    borderColor: '#ff9f1c',
+  },
+  'Critical': {
+    bgColor: '#fde8ea',
+    textColor: '#e63946',
+    borderColor: '#e63946',
+  },
 };
 
-const BG_COLORS = {
-  ok: '#d5f4e6',
-  warning: '#fef5e7',
-  critical: '#fadbd8',
-};
-
-const LABELS = {
-  ok: 'Healthy',
-  warning: 'Warning',
-  critical: 'Critical',
-};
-
-export function SeverityBadge({ severity, pulse, compact }: Props) {
-  const color = COLORS[severity];
-  const bgColor = BG_COLORS[severity];
-  const label = LABELS[severity];
+export function SeverityBadge({ label }: Props) {
+  const style = STYLES[label];
 
   return (
     <span
       style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: compact ? '4px' : '6px',
-        padding: compact ? '4px 8px' : '6px 12px',
-        backgroundColor: bgColor,
-        border: `1px solid ${color}30`,
-        borderRadius: '12px',
-        fontSize: compact ? '11px' : '12px',
-        color,
+        display: 'inline-block',
+        padding: '4px 8px',
+        backgroundColor: style.bgColor,
+        color: style.textColor,
+        border: `1px solid ${style.borderColor}`,
+        borderRadius: '4px',
+        fontSize: '10px',
         fontWeight: 600,
-        animation: pulse ? `pulse-${severity} 2s infinite` : undefined,
         whiteSpace: 'nowrap',
       }}
     >
-      <span
-        style={{
-          display: 'inline-block',
-          width: compact ? '6px' : '8px',
-          height: compact ? '6px' : '8px',
-          borderRadius: '50%',
-          backgroundColor: color,
-          flexShrink: 0,
-        }}
-      />
-      {!compact && label}
-      <style>{`
-        @keyframes pulse-ok { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-        @keyframes pulse-warning { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        @keyframes pulse-critical { 0%, 100% { opacity: 1; box-shadow: 0 0 8px ${color}; } 50% { opacity: 0.8; box-shadow: 0 0 16px ${color}; } }
-      `}</style>
+      {label}
     </span>
   );
 }

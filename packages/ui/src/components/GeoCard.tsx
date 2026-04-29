@@ -1,3 +1,5 @@
+import { SeverityBadge } from './SeverityBadge';
+
 type Props = {
   city: string;
   activeCampaigns: number;
@@ -25,14 +27,10 @@ const SEVERITY_BG = {
   critical: '#fadbd8',
 };
 
-function getPerformanceLabel(actual: number, benchmark: number): { text: string; bgColor: string; textColor: string } {
-  if (actual >= benchmark * 1.1) {
-    return { text: 'Excellent', bgColor: '#d1fae5', textColor: '#065f46' };
-  }
-  if (actual >= benchmark * 0.95) {
-    return { text: 'On Target', bgColor: '#f0fdf4', textColor: '#166534' };
-  }
-  return { text: 'Needs Review', bgColor: '#fefce8', textColor: '#b45309' };
+function getPerformanceLabel(actual: number, benchmark: number): 'Excellent' | 'On Target' | 'Needs Review' | 'Critical' {
+  if (actual >= benchmark * 1.1) return 'Excellent';
+  if (actual >= benchmark * 0.95) return 'On Target';
+  return 'Needs Review';
 }
 
 export function GeoCard({ city, activeCampaigns, avgCma, dominantFunnel, worstSeverity }: Props) {
@@ -71,22 +69,7 @@ export function GeoCard({ city, activeCampaigns, avgCma, dominantFunnel, worstSe
             {activeCampaigns} {activeCampaigns === 1 ? 'campaign' : 'campaigns'}
           </div>
         </div>
-        <div
-          style={{
-            padding: '4px 8px',
-            background: cmaPerformance.bgColor,
-            color: cmaPerformance.textColor,
-            borderRadius: '4px',
-            fontSize: '10px',
-            fontWeight: 600,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}
-          title={cmaPerformance.text}
-        >
-          {cmaPerformance.text}
-        </div>
+        <SeverityBadge label={cmaPerformance} />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', paddingTop: '12px', borderTop: `1px solid ${SEVERITY_COLORS[worstSeverity]}15` }}>
         <div>

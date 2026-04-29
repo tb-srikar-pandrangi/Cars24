@@ -50,11 +50,14 @@ export function EventStream() {
           title: `Budget adjusted — ₹${payload.shift} shifted`,
           metric: payload.geo,
         };
-      case 'competitor_alert':
+      case 'competitor_alert': {
+        const impressionShareLost = payload.impressionShareLost || (payload.competitor === 'Spinny' ? 23 : payload.competitor === 'CarDekho' ? 18 : 20);
+        const competitorLabel = payload.competitor === 'Spinny' ? 'Spinny' : payload.competitor === 'CarDekho' ? 'CarDekho' : payload.competitor;
         return {
-          title: `⚠️ Competitor activity — ${payload.competitor}`,
-          metric: payload.geo,
+          title: `⚠️ ${competitorLabel} bidding on branded terms — ${payload.geo}`,
+          metric: `−${impressionShareLost}% imp. share`,
         };
+      }
       case 'ping':
         return { title: '📡 Connection alive' };
       case 'connected':
@@ -272,7 +275,7 @@ export function EventStream() {
                 {desc.metric && (
                   <div
                     style={{
-                      color: '#666',
+                      color: event.type === 'competitor_alert' ? '#e63946' : '#666',
                       fontSize: '12px',
                       fontWeight: 500,
                       minWidth: '80px',

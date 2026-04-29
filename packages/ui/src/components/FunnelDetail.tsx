@@ -50,18 +50,18 @@ const OPTIMIZATION_STEPS: Record<string, string[]> = {
   ],
 };
 
-function getPerformanceLabel(current: number, benchmark: number, metricType: 'cost' | 'margin'): { text: string; color: string } {
+function getPerformanceLabel(current: number, benchmark: number, metricType: 'cost' | 'margin'): { text: 'Excellent' | 'On Target' | 'Needs Review' | 'Critical'; color: string } {
   const pct = Math.round(((current - benchmark) / benchmark) * 100);
   const isGood = metricType === 'cost' ? current < benchmark : current > benchmark;
 
   if (isGood) {
-    if (Math.abs(pct) <= 5) return { text: 'On Target', color: '#27ae60' };
-    if (Math.abs(pct) <= 15) return { text: 'Good', color: '#27ae60' };
-    return { text: 'Excellent', color: '#27ae60' };
+    if (Math.abs(pct) <= 5) return { text: 'On Target', color: '#666666' };
+    if (Math.abs(pct) <= 15) return { text: 'Excellent', color: '#2dc653' };
+    return { text: 'Excellent', color: '#2dc653' };
   } else {
-    if (Math.abs(pct) <= 5) return { text: 'On Target', color: '#f39c12' };
-    if (Math.abs(pct) <= 15) return { text: 'Needs Improvement', color: '#f39c12' };
-    return { text: 'Critical', color: '#e74c3c' };
+    if (Math.abs(pct) <= 5) return { text: 'On Target', color: '#666666' };
+    if (Math.abs(pct) <= 15) return { text: 'Needs Review', color: '#ff9f1c' };
+    return { text: 'Critical', color: '#e63946' };
   }
 }
 

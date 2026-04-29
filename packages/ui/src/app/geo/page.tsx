@@ -58,9 +58,6 @@ export default function GeoPage() {
     setGeos(sorted);
   }, []);
 
-  // Split into India and International by location
-  const indiaGeos = geos.filter(g => !g.city.includes(','));
-  const internationalGeos = geos.filter(g => g.city.includes(','));
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#ffffff' }}>
@@ -185,44 +182,24 @@ export default function GeoPage() {
             Geographic Performance
           </h1>
           <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#666' }}>
-            Campaign health and CMA metrics by city and region
+            Campaign health and CMA metrics across India
           </p>
         </div>
 
         {/* Info Banner */}
         <div style={{ padding: '16px 32px', background: '#f0f7ff', borderBottom: '1px solid #d4e8ff' }}>
           <div style={{ fontSize: '12px', color: '#0055cc', lineHeight: '1.5' }}>
-            <strong>📍 What you're seeing:</strong> Geographic breakdown of campaign performance showing which cities have healthy conversion funnels and which need attention. Sorted by severity (critical issues first), this helps you identify regional problems and allocate budgets more effectively across different markets.
+            <strong>📍 What you're seeing:</strong> City-level breakdown of campaign CMA and funnel health across India. Cities are sorted by performance — Excellent cities are candidates for budget expansion; Needs Review cities require diagnosis before further spend.
           </div>
         </div>
 
         {/* Grid content */}
         <div style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
-          {/* India cities */}
-          <div style={{ marginBottom: '40px' }}>
-            <h2 style={{ fontSize: '13px', color: '#ff6b35', fontWeight: 600, textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.5px' }}>
-              India
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
-              {indiaGeos.map((geo) => (
-                <GeoCard key={geo.city} {...geo} />
-              ))}
-            </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
+            {geos.map((geo) => (
+              <GeoCard key={geo.city} {...geo} />
+            ))}
           </div>
-
-          {/* International cities */}
-          {internationalGeos.length > 0 && (
-            <div>
-              <h2 style={{ fontSize: '13px', color: '#0077be', fontWeight: 600, textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.5px' }}>
-                International
-              </h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
-                {internationalGeos.map((geo) => (
-                  <GeoCard key={geo.city} {...geo} />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 

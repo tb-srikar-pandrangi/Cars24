@@ -205,7 +205,7 @@ export function EventFeed() {
                       {issue.stage.replace(/_/g, ' ')}
                     </span>
                     <span style={{ fontSize: '11px', color: getSeverityColor(issue.severity), fontWeight: 500 }}>
-                      {issue.severity === 'critical' ? 'Critical' : issue.severity === 'warning' ? 'Warning' : 'Healthy'}
+                      {issue.severity === 'critical' ? 'Critical' : issue.severity === 'warning' ? 'Needs Review' : 'On Target'}
                     </span>
                   </div>
                   <p style={{ margin: 0, fontSize: '12px', color: '#1d1d1f', lineHeight: '1.4' }}>

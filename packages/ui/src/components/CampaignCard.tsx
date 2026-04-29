@@ -1,3 +1,5 @@
+import { SeverityBadge } from './SeverityBadge';
+
 type Props = {
   campaignId: string;
   campaignName: string;
@@ -39,26 +41,18 @@ function getDelta(actual: number, benchmark: number, metricType: 'cost' | 'margi
   }
 }
 
-function getPerformanceLabel(actual: number, benchmark: number, metricType: 'cost' | 'margin'): { text: string; bgColor: string; textColor: string } {
+function getPerformanceLabel(actual: number, benchmark: number, metricType: 'cost' | 'margin'): 'Excellent' | 'On Target' | 'Needs Review' | 'Critical' {
   const pct = Math.round(((actual - benchmark) / benchmark) * 100);
   const isGood = metricType === 'cost' ? actual < benchmark : actual > benchmark;
 
   if (metricType === 'margin') {
-    if (actual >= benchmark * 1.1) {
-      return { text: 'Excellent', bgColor: '#d1fae5', textColor: '#065f46' };
-    }
-    if (actual >= benchmark * 0.95) {
-      return { text: 'On Target', bgColor: '#f0fdf4', textColor: '#166534' };
-    }
-    return { text: 'Needs Review', bgColor: '#fefce8', textColor: '#b45309' };
+    if (actual >= benchmark * 1.1) return 'Excellent';
+    if (actual >= benchmark * 0.95) return 'On Target';
+    return 'Needs Review';
   } else {
-    if (actual <= benchmark * 0.9) {
-      return { text: 'Excellent', bgColor: '#d1fae5', textColor: '#065f46' };
-    }
-    if (actual <= benchmark * 1.05) {
-      return { text: 'On Target', bgColor: '#f0fdf4', textColor: '#166534' };
-    }
-    return { text: 'Needs Review', bgColor: '#fefce8', textColor: '#b45309' };
+    if (actual <= benchmark * 0.9) return 'Excellent';
+    if (actual <= benchmark * 1.05) return 'On Target';
+    return 'Needs Review';
   }
 }
 
@@ -143,22 +137,7 @@ export function CampaignCard({ campaignName, geo, spend, cpl, cma, severity, onC
         </div>
       </div>
       <div style={{ textAlign: 'center', minWidth: 0 }}>
-        <div
-          style={{
-            padding: '4px 8px',
-            background: cmaPerformance.bgColor,
-            color: cmaPerformance.textColor,
-            borderRadius: '4px',
-            fontSize: '10px',
-            fontWeight: 600,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}
-          title={cmaPerformance.text}
-        >
-          {cmaPerformance.text}
-        </div>
+        <SeverityBadge label={cmaPerformance} />
       </div>
     </div>
   );
